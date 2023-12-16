@@ -7,7 +7,7 @@ dotnet add package MySql.Data
 ### 2. Edit `appsettings.Development.json` and `appsettings.json`
 ```json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=localhost;Database=YourDatabaseName;User=root;Password=YourPassword;Port=3306;"
+  "DefaultConnection":"Server=localhost;Database=YourDatabaseName;User=root;Password=YourPassword;Port=3306;"
 }
 ```
 
@@ -17,7 +17,7 @@ private readonly string _connectionString;
 
 public DatabaseHelper(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("DefaultConnection");
+_connectionString = configuration.GetConnectionString("DefaultConnection");
     }
 ```
 
@@ -38,3 +38,5 @@ public UserController(UserService us)
     _userService = us;
 }
 ```
+
+  * Make sure to close the DB connection at the end of DB operations , otherwise it makes security vulnerabilities. Whoever it may slow down the DB operations also.
