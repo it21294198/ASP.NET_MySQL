@@ -18,6 +18,7 @@ namespace ASP.NET_MySQL.Services
         public void CreateUser(User user)
         {
             using var connection = _databaseHelper.GetConnection();
+            connection.Open();
             using var command = new MySqlCommand("INSERT INTO users VALUES (@Id,@Name, @Email)", (MySqlConnection)connection);
 
             command.Parameters.AddWithValue("@Id", user.Id);
@@ -25,31 +26,30 @@ namespace ASP.NET_MySQL.Services
             command.Parameters.AddWithValue("@Email", user.Email);
 
             command.ExecuteNonQuery();
+            connection.Close();
         }
 
         public User GetUserById(int id)
         {
             using var connection = _databaseHelper.GetConnection();
-
+            connection.Open();
             using var command = new MySqlCommand("SELECT * FROM users WHERE id=@Id", (MySqlConnection)connection);
 
             command.Parameters.AddWithValue("@Id",id);
 
             using var reader = command.ExecuteReader();
 
+            var user = new User();
+
             if (reader.Read())
             {
-                return new User
-                (
-                    reader.GetInt32("id"),
-                    reader.GetString("name"),
-                    reader.GetString("email")
-                );
+                user.Id = reader.GetInt32("id");
+                user.Name = reader.GetString("name");
+                user.Email = reader.GetString("email");
             }
-            else
-            {
-                return new User();
-            }
+
+            connection.Close();
+            return user;
         }
 
         public IEnumerable<User> GetUsers()
@@ -57,6 +57,7 @@ namespace ASP.NET_MySQL.Services
             var users = new List<User>();
 
             using var connection = _databaseHelper.GetConnection();
+            connection.Open();
 
             using var command = new MySqlCommand("SELECT * FROM users", (MySqlConnection)connection);
 
@@ -71,30 +72,35 @@ namespace ASP.NET_MySQL.Services
                 ));
             }
 
+            connection.Close();
             return users;
         }
 
         public int DeleteUser(int id)
         {
             using var connection = _databaseHelper.GetConnection();
-
+            connection.Open();
             using var command = new MySqlCommand("DELETE FROM users WHERE id = @Id", (MySqlConnection)connection);
             command.Parameters.AddWithValue("@Id", id);
 
             var noRows = command.ExecuteNonQuery();
+
+            connection.Close();
             return noRows;
         }
 
         public int UpdateUser(User user)
         {
             using var connection = _databaseHelper.GetConnection();
-
+            connection.Open();
             using var command = new MySqlCommand("UPDATE users SET name = @Name, email = @Email WHERE id = @Id", (MySqlConnection)connection);
             command.Parameters.AddWithValue("@Id", user.Id);
             command.Parameters.AddWithValue("@Name", user.Name);
             command.Parameters.AddWithValue("@Email", user.Email);
 
             var noRows = command.ExecuteNonQuery();
+
+            connection.Close();
             return noRows;
         }
 

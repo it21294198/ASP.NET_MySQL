@@ -17,7 +17,7 @@ namespace ASP.NET_MySQL.Util
         {
             var connection = new MySqlConnection(_connectionString);
             //remember to close the connection at the end
-            connection.Open();
+            //connection.Open();
             return connection;
         }
     }

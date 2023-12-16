@@ -40,6 +40,13 @@ namespace ASP.NET_MySQL.Controllers
             return user;
         }
 
+        [HttpPost("user/{id}")]
+        public User GetUserById(int id)
+        {
+            var user = _userService.GetUserById(id);
+            return user;
+        }
+
         [HttpGet("user")]
         public IEnumerable<User> GetAllUser()
         {
